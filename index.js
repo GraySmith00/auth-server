@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const app = express();
 const router = require('./router');
-require('dotenv').load();
+require('dotenv').config();
 
 // App Setup
 app.use(morgan('combined'));
@@ -15,12 +15,9 @@ router(app);
 // DB Setup
 const db = process.env.MONGO_URI;
 mongoose
-  .connect(
-    db,
-    { useNewUrlParser: true }
-  )
+  .connect(db, { useNewUrlParser: true })
   .then(() => console.log('MongoDB Connected'))
-  .catch(err => console.log(err));
+  .catch((err) => console.log(err));
 
 // Server Setup
 const port = process.env.PORT || 3090;
