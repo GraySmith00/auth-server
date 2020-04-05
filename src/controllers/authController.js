@@ -3,9 +3,13 @@ const jwt = require('jwt-simple');
 const userValidation = require('../validation/userValidation');
 const bcrypt = require('bcryptjs');
 
-const tokenForUser = (user) => {
+const getUserToken = (user) => {
   const timestamp = new Date().getTime();
-  return jwt.encode({ sub: user.id, iat: timestamp }, process.env.SECRET);
+
+  return jwt.encode(
+    { user: { id: user.id, email: user.email }, iat: timestamp },
+    process.env.SECRET
+  );
 };
 
 exports.register = async (req, res, next) => {
@@ -36,8 +40,6 @@ exports.register = async (req, res, next) => {
     if (newUser) {
       return res.json({
         id: newUser.id,
-        password: newUser.password,
-        token: tokenForUser(user),
         message: 'New user created successfully.',
       });
     } else {
@@ -75,7 +77,12 @@ exports.login = async (req, res, next) => {
     }
 
     // Validation passed
-    return res.status('200').send({ message: 'Logged in successfully. ' });
+    res.cookie({ jwt: getUserToken(existingUser) });
+    return res.status('200').send({
+      userId: existingUser.id,
+      message: 'Logged in successfully.',
+      token: getUserToken(existingUser),
+    });
   } catch (err) {
     return next(err);
   }
