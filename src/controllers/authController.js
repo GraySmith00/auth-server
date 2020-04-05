@@ -68,12 +68,14 @@ exports.login = async (req, res, next) => {
     }
 
     // Validation passed
-    res.cookie({ jwt: getUserToken(existingUser) });
-    return res.status('200').send({
-      userId: existingUser.id,
-      message: 'Logged in successfully.',
-      token: getUserToken(existingUser),
-    });
+    return res
+      .header('auth-token', getUserToken(existingUser))
+      .status('200')
+      .send({
+        userId: existingUser.id,
+        message: 'Logged in successfully.',
+        token: getUserToken(existingUser),
+      });
   } catch (err) {
     return next(err);
   }
