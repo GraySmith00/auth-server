@@ -1,16 +1,7 @@
 const User = require('../models/user');
-const jwt = require('jwt-simple');
 const userValidation = require('../validation/userValidation');
 const bcrypt = require('bcryptjs');
-
-const getUserToken = (user) => {
-  const timestamp = new Date().getTime();
-
-  return jwt.encode(
-    { user: { id: user.id, email: user.email }, iat: timestamp },
-    process.env.SECRET
-  );
-};
+const getUserToken = require('../utils/getUserToken');
 
 exports.register = async (req, res, next) => {
   const { email, password } = req.body;
