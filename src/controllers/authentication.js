@@ -1,23 +1,18 @@
 const User = require('../models/user');
 const jwt = require('jwt-simple');
-const Joi = require('@hapi/joi');
+const getRegisterValidation = require('../validation/userValidation')
+  .getRegisterValidation;
 
 const tokenForUser = (user) => {
   const timestamp = new Date().getTime();
   return jwt.encode({ sub: user.id, iat: timestamp }, process.env.SECRET);
 };
 
-// Validation
-const schema = Joi.object({
-  email: Joi.string().min(6).required(),
-  password: Joi.string().min(6).required(),
-});
-
 exports.register = async (req, res, next) => {
   const { email, password } = req.body;
 
-  // Joi Validation
-  const { error } = schema.validate(req.body);
+  // Validation
+  const error = getRegisterValidation(req.body);
   if (error && error.details.length) {
     return res.status(422).json({ error: error.details[0].message });
   }
