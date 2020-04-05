@@ -7,6 +7,7 @@ require('dotenv').config();
 
 // Import Routes
 const authRoutes = require('./src/routes/authRoutes');
+const postRoutes = require('./src/routes/postRoutes');
 
 // Initialize Express App
 const app = express();
@@ -20,6 +21,7 @@ app.use(bodyParser.json({ type: '*/*' }));
 
 // Routes
 app.use('/api/user', authRoutes);
+app.use('/api/posts', postRoutes);
 
 // DB Setup
 const db = process.env.MONGO_URI;
