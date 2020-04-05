@@ -8,20 +8,20 @@ const userSchema = new Schema({
     type: String,
     unique: true,
     lowercase: true,
-    required: true
+    required: true,
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   date: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
 // Encrypt password on save
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async (next) => {
   const user = this;
   bcrypt.genSalt(10, (err, salt) => {
     if (err) return next(err);

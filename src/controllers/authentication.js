@@ -25,9 +25,10 @@ exports.register = async (req, res, next) => {
         .json({ error: 'A user with that email already exists.' });
     }
     const user = new User({ email, password });
-    await user.save();
+    const newUser = await user.save();
+    console.log(newUser);
 
-    res.json({ token: tokenForUser(user) });
+    res.json({ id: newUser.id, token: tokenForUser(user) });
   } catch (err) {
     return next(err);
   }
