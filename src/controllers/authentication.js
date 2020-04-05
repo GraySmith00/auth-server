@@ -1,21 +1,25 @@
 const User = require('../models/user');
 const jwt = require('jwt-simple');
+const Joi = require('@hapi/joi');
 
-const tokenForUser = user => {
+const tokenForUser = (user) => {
   const timestamp = new Date().getTime();
   return jwt.encode({ sub: user.id, iat: timestamp }, process.env.SECRET);
 };
 
-exports.signup = async (req, res, next) => {
-  const { email, password } = req.body;
-  const requiredParams = ['email', 'password'];
+// Validation
+const schema = Joi.object({
+  email: Joi.string().min(6).required(),
+  password: Joi.string().min(6).required(),
+});
 
-  for (let param of requiredParams) {
-    if (!req.body[param]) {
-      return res.status(422).json({
-        error: `Expected format: { email: <String>, password: <String> }. You're missing a "${param}" property.`
-      });
-    }
+exports.register = async (req, res, next) => {
+  const { email, password } = req.body;
+
+  // Joi Validation
+  const { error } = schema.validate(req.body);
+  if (error && error.details.length) {
+    return res.status(422).json({ error: error.details[0].message });
   }
 
   try {
