@@ -3,14 +3,25 @@ const http = require('http');
 const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
-const app = express();
-const router = require('./router');
 require('dotenv').config();
+
+// Import Routes
+const authRoutes = require('./src/routes/authRoutes');
+const postRoutes = require('./src/routes/postRoutes');
+
+// Initialize Express App
+const app = express();
+app.get('/', (_, res) => {
+  res.send({ message: 'Server is up and running!' });
+});
 
 // App Setup
 app.use(morgan('combined'));
 app.use(bodyParser.json({ type: '*/*' }));
-router(app);
+
+// Routes
+app.use('/api/user', authRoutes);
+app.use('/api/posts', postRoutes);
 
 // DB Setup
 const db = process.env.MONGO_URI;
@@ -20,7 +31,7 @@ mongoose
   .catch((err) => console.log(err));
 
 // Server Setup
-const port = process.env.PORT || 3090;
+const port = process.env.PORT || 5000;
 const server = http.createServer(app);
 server.listen(port, () => {
   console.log(`App listening on port ${port}`);

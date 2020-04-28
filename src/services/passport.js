@@ -7,7 +7,7 @@ require('dotenv').config();
 // setup options for JWT strategy
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-  secretOrKey: process.env.SECRET,
+  secretOrKey: process.env.TOKEN_SECRET,
 };
 
 // create JWT strategy
