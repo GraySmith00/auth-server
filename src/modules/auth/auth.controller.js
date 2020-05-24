@@ -1,7 +1,7 @@
-const User = require('../models/user');
-const userValidation = require('../validation/userValidation');
+const User = require('./auth.model');
+const userValidation = require('./auth.validation');
 const bcrypt = require('bcryptjs');
-const getUserToken = require('../utils/getUserToken');
+const getUserToken = require('../../utils/getUserToken');
 
 exports.register = async (req, res, next) => {
   const { email, password } = req.body;
