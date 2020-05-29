@@ -69,12 +69,12 @@ exports.login = async (req, res, next) => {
 
     // Validation passed
     return res
-      .header('auth-token', getUserToken(existingUser))
+      .header('Authorization', `Bearer ${getUserToken(existingUser)}`)
       .status('200')
       .send({
         userId: existingUser.id,
         message: 'Logged in successfully.',
-        token: getUserToken(existingUser),
+        token: `Bearer ${getUserToken(existingUser)}`,
       });
   } catch (err) {
     return next(err);
